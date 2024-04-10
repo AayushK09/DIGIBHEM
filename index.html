@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>=
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        background-image: url('images/backgroundimage.jpg'); /* Add your desired background image here */
+        background-size: cover; /* Adjusts the size of the background image to cover the entire body */
+        background-repeat: no-repeat; /* Ensures the background image is not repeated */
+        background-position: center; /* Centers the background image */
+        background-color: #f4f4f4; /* Fallback color */
+        height: 100vh;
+        }
+
+        .calculator {
+            width: 300px;
+            margin: 50px auto;
+            background-color:black;
+            border: 1px solid black;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            padding: 20px;
+            
+        }
+
+        .calculator input[type="text"] {
+            width: 95%;
+            font-size: 24px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid white;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .calculator button {
+            width: 48px;
+            height: 48px;
+            font-size: 20px;
+            margin: 5px;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color:  lightgray;
+        }
+
+        .calculator button:hover {
+            background-color: white;
+        }
+        .calculator button.active {
+            background-color: gray;
+        }
+        .calculator .row {
+            display: flex;
+        }
+         /* Add this style for the hover effect */
+        .hover-effect {
+               background-color: #d0ebff !important;    
+        }
+        /* Style for the footer */
+        .footer {
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            background-color: black;
+            color: white;
+            font-weight: bold; /* Make text bold */
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <!-- Calculator Display -->
+        <input type="text" id="display" readonly>
+        <!-- Calculator Buttons -->
+    <div class="row">
+        <button data-key="7" onclick="appendToDisplay('7')">7</button>
+        <button data-key="8" onclick="appendToDisplay('8')">8</button>
+        <button data-key="9" onclick="appendToDisplay('9')">9</button>
+        <button data-key="/" onclick="appendToDisplay('/')">/</button>
+        <button data-key="AC" onclick="clearDisplay()">AC</button>
+    </div>
+    <div class="row">
+        <button data-key="4" onclick="appendToDisplay('4')">4</button>
+        <button data-key="5" onclick="appendToDisplay('5')">5</button>
+        <button data-key="6" onclick="appendToDisplay('6')">6</button>
+        <button data-key="*" onclick="appendToDisplay('*')">X</button>
+        <button data-key="Backspace" onclick="removeLast()">⌫</button>
+    </div>
+    <div class="row">
+        <button data-key="1" onclick="appendToDisplay('1')">1</button>
+        <button data-key="2" onclick="appendToDisplay('2')">2</button>
+        <button data-key="3" onclick="appendToDisplay('3')">3</button>
+        <button data-key="-" onclick="appendToDisplay('-')">-</button>
+        <button>&nbsp;</button>
+    </div>
+    <div class="row">
+        <button data-key="0" onclick="appendToDisplay('0')">0</button>
+        <button data-key="." onclick="appendToDisplay('.')">.</button>
+        <button data-key="+" onclick="appendToDisplay('+')">+</button>
+        <button data-key="=" onclick="calculate()">=</button>
+        <button>&nbsp;</button>
+    </div>    
+    <!-- Footer -->
+    <div class="footer">
+        Designed by  AK 
+    </div>
+    <script>
+    // Function to append value to display
+    function appendToDisplay(value) {
+        var display = document.getElementById('display');
+        // Check if value is a dot
+        if (value === '.') {
+            // Check if display already contains a dot
+            if (!display.value.includes('.')) {
+                display.value += value;
+            }
+        } else {
+            display.value += value;
+        }
+    }
+
+    // Function to clear display
+    function clearDisplay() {
+        document.getElementById('display').value = '';
+    }
+
+    // Function to perform calculation
+    function calculate() {
+        try {
+            document.getElementById('display').value = document.getElementById('display').value ? eval(document.getElementById('display').value) : '';
+        } catch (error) {
+            document.getElementById('display').value = '0';
+        }
+    }
+
+    // Function to remove last character from display
+    function removeLast() {
+        var display = document.getElementById('display');
+        display.value = display.value.slice(0, -1);
+    }
+
+    // Function to handle keypress events
+    document.addEventListener('keydown', function(event) {
+        var key = event.key;
+
+        // Allow digits, operators, and some special keys
+        if (/[0-9\.\+\-\*\/=]|Enter|Backspace|Delete/.test(key)) {
+            // Prevent default behavior for these keys
+            event.preventDefault();
+            // Handle keypress actions        
+            switch (key) {
+                case 'Backspace':
+                    removeLast();
+                    break;
+                case 'Delete':
+                    clearDisplay();
+                    break;
+                case 'Enter':
+                    calculate();
+                    break;
+                default:
+                    // Append to display and add hover effect class
+                    appendToDisplay(key);
+                    var button = document.querySelector('button[data-key="' + key + '"]');
+                    if (button) {
+                        button.classList.add('hover-effect');
+                        setTimeout(function() {
+                            button.classList.remove('hover-effect');
+                        }, 100);
+                    }
+                    break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
